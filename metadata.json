@@ -1,0 +1,9 @@
+{
+  "name": "AI Issue Reporter",
+  "description": "An AI-powered application to detect problems in photos, generate an analysis report with location, and prepare an email to the appropriate management personnel.",
+  "requestFramePermissions": [
+    "geolocation",
+    "camera"
+  ],
+  "majorCapabilities": []
+}
