@@ -6,7 +6,7 @@ import IssueTracker from './components/IssueTracker';
 import AdminDashboard from './components/AdminDashboard';
 import Loader from './components/Loader';
 import LoginPage from './components/LoginPage';
-import { analyzeImageWithLocation } from './services/geminiService';
+import { analyzeImageWithLocation, isGeminiConfigured } from './services/geminiService';
 import { AnalysisReport, Location, Status, Priority, User, Role } from './types';
 import { LocationIcon, CheckCircleIcon, ExclamationCircleIcon } from './components/icons';
 import { downloadReadme } from './readmeData';
@@ -305,7 +305,7 @@ const App: React.FC = () => {
     return <LoginPage users={MOCK_USERS} onLogin={handleLogin} error={loginError} />;
   }
 
-  const isReadyToAnalyze = imageFile && location && !isAnnotating;
+  const isReadyToAnalyze = imageFile && location && !isAnnotating && isGeminiConfigured;
   const showDashboard = currentUser.role === Role.Admin || currentUser.role === Role.IssueInspector;
 
   const handleBackToDashboard = () => {
@@ -339,6 +339,15 @@ const App: React.FC = () => {
         </header>
 
         <main className="space-y-8">
+          {currentUser.role === Role.User && !isGeminiConfigured && (
+            <div role="status" className="rounded-lg border border-amber-700 bg-amber-950/60 p-4 text-amber-200">
+              <p className="font-semibold">AI analysis needs a Gemini API key</p>
+              <p className="mt-1 text-sm text-amber-100/90">
+                Copy <code className="rounded bg-black/20 px-1">.env.example</code> to <code className="rounded bg-black/20 px-1">.env</code>,
+                add your key as <code className="rounded bg-black/20 px-1">VITE_GEMINI_API_KEY</code>, then restart the dev server.
+              </p>
+            </div>
+          )}
           {currentReport && location ? (
              <div className="space-y-6">
                 <ReportDisplay 

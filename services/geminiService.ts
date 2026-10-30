@@ -2,6 +2,7 @@ import { GoogleGenAI, Type } from "@google/genai";
 import { AnalysisReport, Location } from "../types";
 
 const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
+export const isGeminiConfigured = Boolean(API_KEY);
 
 const fileToGenerativePart = (base64Data: string, mimeType: string) => {
   return {
@@ -25,7 +26,7 @@ export const analyzeImageWithLocation = async (
 ): Promise<Omit<AnalysisReport, 'id' | 'status' | 'createdAt' | 'reportedBy' | 'imageUrl' | 'assignedInspectorUsername'>> => {
     try {
         if (!API_KEY) {
-            throw new Error("AI analysis is not configured. Add VITE_GEMINI_API_KEY to your .env file.");
+            throw new Error("Gemini API key is missing. Add VITE_GEMINI_API_KEY to .env, then restart the dev server.");
         }
         const ai = new GoogleGenAI({ apiKey: API_KEY });
         const imagePart = fileToGenerativePart(base64ImageData, mimeType);
